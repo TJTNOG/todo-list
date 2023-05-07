@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose"); // 載入mongoose
 const exphbs = require('express-handlebars')
+const Todo = require('./models/todo')
 
 // 加入這段 code, 僅在非正式環境時, 使用 dotenv
 if (process.env.NODE_ENV !== 'production') {
@@ -32,7 +33,10 @@ app.set('view engine', 'hbs')
 
 // 設定首頁路由
 app.get("/", (req, res) => {
-  res.render("index");
+  Todo.find() // 取出 Todo所有資料
+    .lean() // 把Mongoose 的 Model物件轉換成乾淨的JS資料陣列
+    .then((todos) => res.render("index", { todos })) // 將資料傳給 index 樣板
+    .catch((error) => console.error(error));
 });
 
 // 設定port 3000
