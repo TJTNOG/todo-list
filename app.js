@@ -1,6 +1,7 @@
 // 載入 express 並建構應用程式伺服器
 const express = require("express");
 const mongoose = require("mongoose"); // 載入mongoose
+const exphbs = require('express-handlebars')
 
 // 加入這段 code, 僅在非正式環境時, 使用 dotenv
 if (process.env.NODE_ENV !== 'production') {
@@ -25,9 +26,13 @@ db.on('error', () => {
 db.once('open', () => {
   console.log('mongodb connected!')
 })
+
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs'}))
+app.set('view engine', 'hbs')
+
 // 設定首頁路由
 app.get("/", (req, res) => {
-  res.send("hello world");
+  res.render("index");
 });
 
 // 設定port 3000
